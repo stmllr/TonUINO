@@ -32,6 +32,14 @@
   #define buttonFivePin A4
 #endif
 
+// uncomment the below line to enable volume potentiometer
+#define VOLUME_POT
+
+// Control volume with potentiometer on pin A5
+#ifdef VOLUME_POT
+  #define volumePin A5
+#endif
+
 #define LONG_PRESS 1000
 
 // MFRC522
@@ -175,7 +183,11 @@ void resetSettings() {
   mySettings.eq = 1;
   mySettings.locked = false;
   mySettings.standbyTimer = 0;
+#ifdef VOLUME_POT
+  mySettings.invertVolumeButtons = false;
+#else
   mySettings.invertVolumeButtons = true;
+#endif
   mySettings.shortCuts[0].folder = 0;
   mySettings.shortCuts[1].folder = 0;
   mySettings.shortCuts[2].folder = 0;
@@ -759,7 +771,16 @@ void setup() {
   mp3.begin();
   // Zwei Sekunden warten bis der DFPlayer Mini initialisiert ist
   delay(2000);
+
+#ifdef VOLUME_POT
+  pinMode(volumePin, INPUT);
+  volume = getVolumeFromPot();
+  Serial.print(F(" = Volume"));
+  Serial.println( volume );
+#else
   volume = mySettings.initVolume;
+#endif
+
   mp3.setVolume(volume);
   mp3.setEq(DfMp3_Eq(mySettings.eq - 1));
   // Fix für das Problem mit dem Timeout (ist jetzt in Upstream daher nicht mehr nötig!)
@@ -964,6 +985,17 @@ void loop() {
     // Buttons werden nun über JS_Button gehandelt, dadurch kann jede Taste
     // doppelt belegt werden
     readButtons();
+
+  #ifdef VOLUME_POT
+    unsigned int newVolume = getVolumeFromPot();
+
+    if (newVolume != volume) {
+      volume = newVolume;
+      mp3.setVolume(volume);
+      Serial.print(F(" = Volume"));
+      Serial.println( volume );
+    }
+  #endif
 
     // admin menu
     if ((pauseButton.pressedFor(LONG_PRESS) || upButton.pressedFor(LONG_PRESS) || downButton.pressedFor(LONG_PRESS)) && pauseButton.isPressed() && upButton.isPressed() && downButton.isPressed()) {
@@ -1790,7 +1822,11 @@ void writeCard(nfcTagObject nfcTag) {
   delay(2000);
 }
 
-
+#ifdef VOLUME_POT
+int getVolumeFromPot() {
+  return map(analogRead(volumePin), 0, 1015, mySettings.minVolume, mySettings.maxVolume);
+}
+#endif
 
 /**
   Helper routine to dump a byte array as hex values to Serial.
