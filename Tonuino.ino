@@ -35,8 +35,8 @@
 // Play modes
 #define UNDEFINED_MODE 0 // No mode defines
 
-// Hörspielmodus: eine zufällige Datei aus dem Ordner
-#define PLAY_SINGLE_RANDOM_TRACK 1 // Hörspiel Modus: Play a random track from folder
+// Hörbuch Modus: kompletten Ordner spielen und Fortschritt merken
+#define PLAY_ALL_TRACKS_AND_SAVE_CURRENT 1 // Hörbuch Modus: Play tracks from folder and save current track
 
 // Album Modus: kompletten Ordner spielen
 #define PLAY_ALL_TRACKS 2 // Album Modus: Play all tracks from folder
@@ -47,8 +47,8 @@
 // Einzel Modus: eine Datei aus dem Ordner abspielen
 #define PLAY_SINGLE_TRACK 4 // Einzel Modus: Play a track from folder
 
-// Hörbuch Modus: kompletten Ordner spielen und Fortschritt merken
-#define PLAY_ALL_TRACKS_AND_SAVE_CURRENT 5 // Hörbuch Modus: Play tracks from folder and save current track
+// Hörspielmodus: eine zufällige Datei aus dem Ordner
+#define PLAY_SINGLE_RANDOM_TRACK 5 // Hörspiel Modus: Play a random track from folder
 
 // Administrationskarte
 #define ADMIN_MODE 6 // Create admin card
